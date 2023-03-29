@@ -2,11 +2,11 @@
 module.exports =  class UserDto {
   id;
   email;
-  name;
+  firsName;
 
   constructor(model) {
     this.id = model.id;
     this.email = model.email;
-    this.name = model.name;
+    this.firsName = model.firsName;
   }
 }
