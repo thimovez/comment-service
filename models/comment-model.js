@@ -38,7 +38,6 @@ const CommentPath = sequelize.define('comment_path', {
   }
   }, { 
     timestamps: false,
-    primaryKey: false
   });
 
 Comment.hasMany(CommentPath);
