@@ -8,7 +8,8 @@ create TABLE users(
 
 CREATE TABLE tokens(
     id VARCHAR PRIMARY KEY UNIQUE REFERENCES users(id),
-    refreshToken VARCHAR(255) UNIQUE NOT NULL
+    refreshToken VARCHAR(255) UNIQUE NOT NULL DEFERRABLE
+    constraint pk_refreshToken primary key (refreshToken) deferrable initially immediate
 );
 
 create TABLE comments(
