@@ -1,11 +1,15 @@
 const ApiError = require('../exceptions/api.error');
-const Comment = require('../models/comment-model');
+const {Comment, CommentPath} = require('../models/comment-model');
 
 class CommentService {
   async createComment(content, userId) {
-    const comment = await Comment.create({content: content, parentId: userId, displayOrder: 1, indentLevel: 0});
-
-    return comment;
+    const comment = await Comment.create({content: content, parentId: userId});
+    const path = await CommentPath.create({ancestor: 16, descendant: comment.id, path_length: 1});
+    console.log(path);
+    if (!comment) {
+      console.log('hello')
+    }
+    return comment
   }
 
   async createReply(id, content, userId) {
