@@ -15,7 +15,13 @@ class CommentController {
 
   async createReply(req, res, next) {
     try {
-      res.json('It is reply')
+      const user = req.user;
+      const {content} = req.body;
+      const id = req.params.id;
+
+      const newReply = await commentService.createReply(id, content, user.id );
+
+      res.json(newReply)
     } catch(e) {
         next(e);
     }
