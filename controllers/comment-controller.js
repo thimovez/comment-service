@@ -7,7 +7,7 @@ class CommentController {
       const {content} = req.body;
       const newComment = await commentService.createComment(content, user.id);
       
-      res.json(newComment);
+      res.json(newComment.comment);
     } catch(e) {
         next(e);
     }
