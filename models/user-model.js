@@ -1,7 +1,7 @@
 const sequelize = require('../database/db');
 const {DataTypes} = require('sequelize');
 const Token = require('./token-model');
-const Comment = require('./comment-model');
+const {Comment} = require('./comment-model');
 
 const User = sequelize.define('user', {
   id: {
