@@ -1,7 +1,7 @@
 const sequelize = require('../database/db');
 const {DataTypes} = require('sequelize');
-const TokenModel = require('./token-model');
 const Token = require('./token-model');
+const Comment = require('./comment-model');
 
 const User = sequelize.define('user', {
   id: {
@@ -26,7 +26,13 @@ const User = sequelize.define('user', {
     tableName: 'users'
   });
 
-User.hasOne(TokenModel);
+User.hasOne(Token);
 Token.belongsTo(User);
+
+// User.hasMany(Comment, {as: 'Parent', foreignKey: 'childId'});
+// Comment.belongsTo(User, {as: 'Child', foreignKey: 'parentId'});
+User.hasMany(Comment, {foreignKey: 'parentId'});
+Comment.belongsTo(User, {foreignKey: 'parentId'});
+
 
 module.exports = User;
