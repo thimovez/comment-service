@@ -29,8 +29,6 @@ const User = sequelize.define('user', {
 User.hasOne(Token);
 Token.belongsTo(User);
 
-// User.hasMany(Comment, {as: 'Parent', foreignKey: 'childId'});
-// Comment.belongsTo(User, {as: 'Child', foreignKey: 'parentId'});
 User.hasMany(Comment, {foreignKey: 'parentId'});
 Comment.belongsTo(User, {foreignKey: 'parentId'});
 
