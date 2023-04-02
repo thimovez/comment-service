@@ -1,13 +1,21 @@
 const commentService = require('../service/comment-service');
 
 class CommentController {
-  async create(req, res, next) {
+  async createComment(req, res, next) {
     try {
       const user = req.user;
       const {content} = req.body;
-      const newComment = await commentService.create(content, user.id);
-      console.log(user);
+      const newComment = await commentService.createComment(content, user.id);
+      
       res.json(newComment);
+    } catch(e) {
+        next(e);
+    }
+  }
+
+  async createReply(req, res, next) {
+    try {
+      res.json('It is reply')
     } catch(e) {
         next(e);
     }

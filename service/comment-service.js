@@ -1,8 +1,9 @@
 const Comment = require('../models/comment-model');
 
 class CommentService {
-  async create(content, userId) {
-    const comment = await Comment.create({content: content, parentId: userId });
+  async createComment(content, userId) {
+    const comment = await Comment.create({content: content, parentId: userId, displayOrder: 1, indentLevel: 0});
+
     return comment;
   }
 }
