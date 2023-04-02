@@ -10,16 +10,38 @@ const Comment = sequelize.define('comment', {
   content: {
     type: DataTypes.TEXT,
     allowNull: false
-  },
-  displayOrder: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  indentLevel: {
-    type: DataTypes.INTEGER,
-    allowNull: true
   }
   });
 
+const CommentPath = sequelize.define('comment_path', {
+  ancestor: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: false,
+    references: {
+      model: 'comment',
+      key: 'id'
+    }
+  },
+  descendant: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: false,
+    references: {
+      model: 'comment',
+      key: 'id'
+    }
+  },
+  path_length: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  }
+  }, { 
+    timestamps: false,
+    primaryKey: false
+  });
+
+Comment.hasMany(CommentPath);
+CommentPath.belongsTo(Comment);
 
 module.exports = Comment;
