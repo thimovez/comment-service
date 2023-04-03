@@ -13,16 +13,22 @@ class CommentService {
   }
 
   async createReply(id, content, userId) {
-    const commentData = await Comment.findOne({where: {id}});
-    if (!commentData) {
+    const descendant = id;
+    const parentComment = await CommentPath.findOne({where: {descendant}});
+    if (!parentComment) {
       throw ApiError.BadRequest('comment does not exist');
     }
-    
-    const order = commentData.displayOrder + 1;
-    const depth = commentData.indentLevel + 1;
-    const comment = await Comment.create({content: content, parentId: userId, displayOrder: order, indentLevel: depth});
 
-    return comment;
+    const comment_path = parentComment.path_length;
+    const comment = await Comment.create({content: content, parentId: userId});
+    const path = await CommentPath.create({ancestor: id, 
+                                          descendant: comment.id,
+                                          path_length: comment_path + 1});
+
+    return {
+      comment: comment,
+      path: path
+    };
   }
 }
 
