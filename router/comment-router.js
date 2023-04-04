@@ -4,6 +4,6 @@ const router = new Router();
 const authMiddleware = require('../middleware/auth-middleware');
 
 router.post('/', authMiddleware, commentController.createComment);
-router.post('/reply', authMiddleware, commentController.createReply);
+router.get('/get', authMiddleware, commentController.getAllParentComments);
 
 module.exports = router;
