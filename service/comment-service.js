@@ -1,3 +1,5 @@
+const db = require('../database/db');
+const {QueryTypes} = require('sequelize');
 const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
 
@@ -29,6 +31,17 @@ class CommentService {
       comment: comment,
       path: path
     };
+  }
+
+  async getParentComment() {
+    const parentComment = await db.query(`SELECT  c.id, c."content", c."parentId", cp.ancestor, cp.descendant, cp.path_length 
+                                              FROM "comments" c  
+                                              INNER JOIN "comments_paths" cp ON c.id = cp.descendant 
+                                              WHERE cp.path_length = 0`, {
+                                                type: QueryTypes.SELECT
+                                              });
+    
+    return parentComment;
   }
 }
 
