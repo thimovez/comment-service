@@ -28,6 +28,19 @@ class CommentController {
         next(e);
     }
   }
+
+  async sortParentComments(req, res, next) {
+    try {
+      const {username, email, create_at} = req.body;
+
+      const sortedComments = await commentService.sortBy([username, email, create_at]);
+      
+      res.json(sortedComments)
+
+    } catch (e) {
+      next(e)
+    }
+  }
   
 }
 

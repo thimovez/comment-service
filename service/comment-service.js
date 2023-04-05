@@ -43,6 +43,25 @@ class CommentService {
     
     return parentComment;
   }
+
+  async sortParentCommentsByEmail() {
+    const sortedComments = await db.query(`SELECT u.email, u."firsName", c."createdAt", c."parentId", c."content", cp.ancestor, cp.descendant, cp.path_length
+    FROM "comments" c  
+    INNER JOIN comments_paths cp ON c.id = cp.descendant 
+    INNER JOIN users u ON u.id = c."parentId" 
+    WHERE cp.path_length = 0
+    order by u.email`, {
+      type: QueryTypes.SELECT
+    })
+
+    return sortedComments
+  }
+
+  async sortBy(...item) {
+    
+
+    return item;
+  }
 }
 
 module.exports = new CommentService();
