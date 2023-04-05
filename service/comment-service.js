@@ -2,6 +2,7 @@ const db = require('../database/db');
 const {QueryTypes} = require('sequelize');
 const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
+const User = require('../models/user-model');
 
 class CommentService {
   async createComment(id, content, user) {
@@ -64,10 +65,31 @@ class CommentService {
     return sortedComments
   }
 
-  async sortBy(...item) {
-    
+  async sortBy(body) {
+    if(body.username === 'username' ) {
+      const sortedComments = Comment.findAll({
+        logging:true,
+          include: [
+            {
+              model: User,
+              // where: {
+              // path_length: {[Op.ne]: 0} 
+              // },
+              // through: {
+              // attributes: [/* list the wanted attributes here */]
+              // }
+            },
+            {
+              model: CommentPath,
+            }
+        ]
+      });
 
-    return item;
+      return sortedComments;
+    }
+    const sortedComments = ""
+
+    return sortedComments;
   }
 }
 
