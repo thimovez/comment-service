@@ -5,8 +5,8 @@ const {Comment, CommentPath} = require('../models/comment-model');
 
 class CommentService {
   async createComment(id, content, user) {
-    if(!id) {
-      const reply = await this.createReply(id, content, user)
+    if(typeof id !== 'undefined') {
+      const reply = await this.createReply(id, content, user);
       return reply;
     }
     
