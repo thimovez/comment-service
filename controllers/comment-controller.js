@@ -5,15 +5,10 @@ class CommentController {
     try {
       const user = req.user;
       const {id, content} = req.body;
-      if (!id) {
-        const newComment = await commentService.createComment(content, user.id);
 
-        res.json(newComment);
-      }
-      
-      const newReply = await commentService.createReply(id, content, user.id );
+      const comment = await commentService.createComment(id, content, user.id);
 
-      res.json(newReply);
+      res.json(comment);
     } catch(e) {
         next(e);
     }
