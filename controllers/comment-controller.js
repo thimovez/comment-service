@@ -6,7 +6,7 @@ class CommentController {
       const user = req.user;
       const {id, content} = req.body;
 
-      const comment = await commentService.createComment(id, content, user.id);
+      const comment = await commentService.createComment(id, content, user);
 
       res.json(comment);
     } catch(e) {
