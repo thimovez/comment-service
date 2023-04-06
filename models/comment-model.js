@@ -30,14 +30,11 @@ const CommentPath = sequelize.define('comments_path', {
     timestamps: false
   });
 
-  CommentPath.belongsTo(Comment, {
-    foreignKey: 'ancestor'
-  });
+  Comment.hasMany(CommentPath, {foreignKey: 'ancestor'});
 
   CommentPath.belongsTo(Comment, {
     foreignKey: 'descendant'
   });
-
 
 module.exports = {
   Comment,
