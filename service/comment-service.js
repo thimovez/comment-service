@@ -1,6 +1,7 @@
 const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
 const User = require('../models/user-model');
+const { Op } = require('sequelize');
 
 class CommentService {
   async createComment(id, content, user) {
@@ -52,10 +53,12 @@ class CommentService {
     }
 
     if(body.createdAt === 'createdAt' && body.direction !== '') {
-      return 
+      const sortedComments = this.sortParentComments(body.email, body.direction);
+
+      return sortedComments;
     }
 
-    const sortedComments = ""
+    const sortedComments = this.sortParentComments('email', 'asc');
 
     return sortedComments;
   }
@@ -64,9 +67,15 @@ class CommentService {
     const sortedComments = await User.findAll({
       logging:true,
       order: [[value, direction]],
+     
       include: [
         {
           model: Comment,
+          where: {
+            parentId: {
+              [Op.or]: [],
+            }
+          },
           include: [
             {
               model: CommentPath,
