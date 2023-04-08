@@ -20,19 +20,18 @@ class CommentService {
       path: path
     }
   }
-
+  
   async createReply(id, content, user) {
-    const descendant = id;
-    const parentComment = await CommentPath.findOne({where: {descendant}});
+    const parentComment = await CommentPath.findOne({where: {descendant: id}});
     if (!parentComment) {
       throw ApiError.BadRequest('comment does not exist');
     }
 
-    const comment_path = parentComment.path_length;
+    const commentPath = parentComment.path_length;
     const comment = await Comment.create({content: content, parentId: user.id});
     const path = await CommentPath.create({ancestor: id, 
                                           descendant: comment.id,
-                                          path_length: comment_path + 1});
+                                          path_length: commentPath + 1});
 
     return {
       userData: user,
@@ -66,28 +65,44 @@ class CommentService {
   }
 
   async sortBy(body) {
-    if(body.username === 'username' ) {
-      const sortedComments = Comment.findAll({
-        logging:true,
-          include: [
-            {
-              model: User,
-              // where: {
-              // path_length: {[Op.ne]: 0} 
-              // },
-              // through: {
-              // attributes: [/* list the wanted attributes here */]
-              // }
-            },
-            {
-              model: CommentPath,
-            }
-        ]
-      });
+    if(body.firstName === 'firsName' && body.direction !== '') {
+      const sortedComments = this.sortParentComments(body.username, body.direction);
 
       return sortedComments;
     }
+
+    if(body.email === 'email' && body.direction !== ''){
+      const sortedComments = this.sortParentComments(body.email, body.direction);
+
+      return sortedComments;
+    }
+
+    if(body.createdAt === 'createdAt' && body.direction !== '') {
+      return 
+    }
+
     const sortedComments = ""
+
+    return sortedComments;
+  }
+
+  async sortParentComments(value, direction) {
+    const sortedComments = await User.findAll({
+      logging:true,
+      order: [[value, direction]],
+      include: [
+        {
+          model: Comment,
+          include: [
+            {
+              model: CommentPath,
+              where: {
+                path_length: '0'
+              }
+            }]
+        },
+      ]
+    });
 
     return sortedComments;
   }
