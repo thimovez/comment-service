@@ -14,16 +14,6 @@ class CommentController {
     }
   }
 
-  async getAllParentComments(req, res, next) {
-    try {
-      const parentComments = await commentService.getParentComment();
-
-      res.json(parentComments)
-    } catch(e) {
-        next(e);
-    }
-  }
-
   async sortParentComments(req, res, next) {
     try {
       const body = req.body;

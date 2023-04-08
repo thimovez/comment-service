@@ -1,5 +1,3 @@
-const db = require('../database/db');
-const {QueryTypes} = require('sequelize');
 const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
 const User = require('../models/user-model');
@@ -38,30 +36,6 @@ class CommentService {
       comment: comment,
       path: path
     };
-  }
-
-  async getParentComment() {
-    const parentComment = await db.query(`SELECT  c.id, c."content", c."parentId", cp.ancestor, cp.descendant, cp.path_length 
-                                              FROM "comments" c  
-                                              INNER JOIN "comments_paths" cp ON c.id = cp.descendant 
-                                              WHERE cp.path_length = 0`, {
-                                                type: QueryTypes.SELECT
-                                              });
-    
-    return parentComment;
-  }
-
-  async sortParentCommentsByEmail() {
-    const sortedComments = await db.query(`SELECT u.email, u."firsName", c."createdAt", c."parentId", c."content", cp.ancestor, cp.descendant, cp.path_length
-    FROM "comments" c  
-    INNER JOIN comments_paths cp ON c.id = cp.descendant 
-    INNER JOIN users u ON u.id = c."parentId" 
-    WHERE cp.path_length = 0
-    order by u.email`, {
-      type: QueryTypes.SELECT
-    })
-
-    return sortedComments
   }
 
   async sortBy(body) {
@@ -106,6 +80,7 @@ class CommentService {
 
     return sortedComments;
   }
+
 }
 
 module.exports = new CommentService();
