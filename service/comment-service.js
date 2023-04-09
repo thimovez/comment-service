@@ -2,6 +2,7 @@ const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
 const User = require('../models/user-model');
 const { Op } = require('sequelize');
+const sequelize = require('../database/db');
 
 class CommentService {
   async createComment(id, content, user) {
@@ -41,19 +42,19 @@ class CommentService {
 
   async sortBy(body) {
     if(body.firstName === 'firsName' && body.direction !== '') {
-      const sortedComments = this.sortParentComments(body.username, body.direction);
+      const sortedComments = this.sortParentComments(body.username, body.direction, body.page);
 
       return sortedComments;
     }
 
     if(body.email === 'email' && body.direction !== ''){
-      const sortedComments = this.sortParentComments(body.email, body.direction);
+      const sortedComments = this.sortParentComments(body.email, body.direction, body.page);
 
       return sortedComments;
     }
 
     if(body.createdAt === 'createdAt' && body.direction !== '') {
-      const sortedComments = this.sortParentComments(body.email, body.direction);
+      const sortedComments = this.sortParentComments(body.email, body.direction, body.page);
 
       return sortedComments;
     }
@@ -63,28 +64,25 @@ class CommentService {
     return sortedComments;
   }
 
-  async sortParentComments(value, direction) {
-    const sortedComments = await User.findAll({
-      logging:true,
-      order: [[value, direction]],
-     
+  async sortParentComments(value, direction, page) {
+    const sortedComments =  await CommentPath.findAll({
+      where: {
+        path_length: '0'
+      },
+      offset: page * 2,
+      limit: 2,
       include: [
         {
           model: Comment,
-          where: {
-            parentId: {
-              [Op.or]: [],
-            }
-          },
           include: [
             {
-              model: CommentPath,
-              where: {
-                path_length: '0'
-              }
-            }]
-        },
-      ]
+              model: User,
+              order: [value, direction]
+            },
+          ]
+        }
+      ],
+
     });
 
     return sortedComments;
