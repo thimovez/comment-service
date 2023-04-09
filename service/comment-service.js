@@ -40,26 +40,20 @@ class CommentService {
     };
   }
 
-  async sortBy(body) {
-    if(body.firstName === 'firsName' && body.direction !== '') {
-      const sortedComments = this.sortParentComments(body.username, body.direction, body.page);
+  async sortBy(sort, direction, page) {
+    if(sort === 'firsName') {
+      const sortedComments = this.sortParentComments(sort, direction, page);
 
       return sortedComments;
     }
 
-    if(body.email === 'email' && body.direction !== ''){
-      const sortedComments = this.sortParentComments(body.email, body.direction, body.page);
+    if(sort === 'createdAt') {
+      const sortedComments = this.sortParentComments(sort, direction, page);
 
       return sortedComments;
     }
 
-    if(body.createdAt === 'createdAt' && body.direction !== '') {
-      const sortedComments = this.sortParentComments(body.email, body.direction, body.page);
-
-      return sortedComments;
-    }
-
-    const sortedComments = this.sortParentComments('email', 'asc');
+    const sortedComments = this.sortParentComments(sort, direction, page);
 
     return sortedComments;
   }
