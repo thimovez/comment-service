@@ -1,8 +1,6 @@
 const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
 const User = require('../models/user-model');
-const { Op } = require('sequelize');
-const sequelize = require('../database/db');
 
 class CommentService {
   async createComment(id, content, user) {
