@@ -5,8 +5,9 @@ class CommentController {
     try {
       const user = req.user;
       const {id, content} = req.body;
+      const file = req.file;
 
-      const comment = await commentService.createComment(id, content, user);
+      const comment = await commentService.createComment(id, content, user, file);
 
       res.json(comment);
     } catch(e) {
