@@ -1,9 +1,17 @@
 const ApiError = require('../exceptions/api.error');
 const {Comment, CommentPath} = require('../models/comment-model');
 const User = require('../models/user-model');
+const fileService = require('./file-service');
 
 class CommentService {
-  async createComment(id, content, user) {
+  async createComment(id, content, user, file) {
+    if (typeof file !== 'undefined') {
+      const fileData = fileService.getFileFormat(file);
+      fileService.verifyFileFormat(fileData);
+
+      return fileData;
+    }
+
     if(typeof id !== 'undefined') {
       const reply = await this.createReply(id, content, user);
       return reply;
