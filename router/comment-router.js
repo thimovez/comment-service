@@ -5,9 +5,7 @@ const authMiddleware = require('../middleware/auth-middleware');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
-const cpUpload = upload.fields([{ name: 'file', maxCount: 1 }, { name: 'img', maxCount: 1 }]);
-
-router.post('/', authMiddleware, cpUpload, commentController.createComment);
+router.post('/', authMiddleware, upload.single('file'), commentController.createComment);
 router.post('/sort', authMiddleware, commentController.sortParentComments);
 
 module.exports = router;
