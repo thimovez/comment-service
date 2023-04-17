@@ -1,5 +1,5 @@
 const ApiError = require('../exceptions/api.error');
-const sizeOf = require('image-size');
+const sharp = require('sharp');
 
 class FileService {
   getFileFormat(file) {
@@ -37,10 +37,20 @@ class FileService {
     return file;
   }
 
-  verifyImgSize(file) {
-    const dimensions = sizeOf(file.path);
-    if(dimensions.width > 320 || dimensions.height > 240) {
-      throw ApiError.BadRequest('file is too big');
+  async verifyImgSize(file) {
+    const metadata = await sharp(file.path).metadata();
+    if(metadata.width > 320 || metadata.height > 240) {
+      await sharp(file.path)
+        .resize(320, 240, {
+          fit: 'contain'
+        })
+        .toFile(`./uploads/${file.encoding}`, (err) => {
+          if(err){
+            console.log(err);
+          }
+        })
+
+        
     }
 
     return file;
