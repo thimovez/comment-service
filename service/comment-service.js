@@ -1,5 +1,6 @@
 const ApiError = require('../exceptions/api.error');
-const {Comment, CommentPath} = require('../models/comment-model');
+const Comment = require('../models/comment');
+const CommentPath = require('../models/comment-path');
 const User = require('../models/user-model');
 const fileService = require('./file-service');
 
