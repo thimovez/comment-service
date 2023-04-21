@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser')
-const sequelize = require('./database/db');
+const {sequelize} = require('./models');
 const router = require('./router/index');
 const errorMiddleware = require('./middleware/error-middlewate');
 
@@ -16,7 +16,7 @@ app.use(errorMiddleware);
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
+    // await sequelize.sync();
     app.listen(PORT, () => {
       console.log(`Server started on http://localhost:${PORT}/`)
     });

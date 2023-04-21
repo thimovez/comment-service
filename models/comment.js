@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
   }, {
     sequelize,
-    modelName: 'comments',
+    modelName: 'Comment',
   });
   return Comment;
 };

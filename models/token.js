@@ -11,14 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Token.belongsTo(models.User);
+      Token.belongsTo(models.User, {
+        foreignKey: 'user_id'
+      });
     }
   }
   Token.init({
     refreshToken: DataTypes.STRING,
+    user_id: DataTypes.UUID
   }, {
     sequelize,
-    modelName: 'tokens',
+    tableName: 'tokens',
+    modelName: 'Token',
   });
   return Token;
 };

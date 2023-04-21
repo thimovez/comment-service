@@ -43,7 +43,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       refreshToken: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(260)
       },
       user_id: {
         allowNull: false,

@@ -1,6 +1,6 @@
 const sequelize = require('../database/db');
 const {DataTypes} = require('sequelize');
-const Token = require('./token-model');
+const Token = require('./token');
 const {Comment} = require('./comment-model');
 
 const User = sequelize.define('user', {

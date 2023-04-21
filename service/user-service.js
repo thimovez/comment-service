@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const tokenService = require('./token-service');
-const User = require('../models/user-model');
+const {User} = require('../models');
 const UserDto = require('../dtos/user-dto');
 const ApiError = require('../exceptions/api.error');
 

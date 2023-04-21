@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     path_length: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'comments_path',
+    modelName: 'CommentPath',
   });
   return CommentPath;
 };
