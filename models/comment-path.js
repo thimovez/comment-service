@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Token extends Model {
+  class CommentPath extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,14 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Token.belongsTo(models.User);
+      CommentPath.belongsTo(models.Comment, {
+        foreignKey: 'descendant'
+      });
     }
   }
-  Token.init({
-    refreshToken: DataTypes.STRING,
+  CommentPath.init({
+    ancestor: DataTypes.INTEGER,
+    descendant: DataTypes.INTEGER,
+    path_length: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'tokens',
+    modelName: 'comments_path',
   });
-  return Token;
+  return CommentPath;
 };

@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasOne(models.Token);
+      User.hasMany(models.Comment, {foreignKey: 'parentId'});
     }
   }
   User.init({
@@ -20,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'users',
   });
   return User;
 };
