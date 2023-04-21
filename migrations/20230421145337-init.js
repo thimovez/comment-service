@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true, 
         allowNull: false,
         references: {
-          model: 'tokens',
-          key: 'user_id'
+          model: 'token',
+          key: "user_id"
         }
       },
       firsName: {
@@ -47,7 +47,11 @@ module.exports = {
       },
       user_id: {
         allowNull: false,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'users',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
