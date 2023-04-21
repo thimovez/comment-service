@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Comment.belongsTo(models.User, {foreignKey: 'parentId'});
+      Comment.belongsTo(models.User, {foreignKey: 'user_id'});
       Comment.hasMany(models.CommentPath, {foreignKey: 'ancestor'});
     }
   }
@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
   }, {
     sequelize,
+    tableName: 'comments',
     modelName: 'Comment',
   });
   return Comment;

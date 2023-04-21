@@ -22,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     path_length: DataTypes.INTEGER
   }, {
     sequelize,
+    timestamps: false,
+    tableName: 'comments_path',
     modelName: 'CommentPath',
   });
   return CommentPath;
