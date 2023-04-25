@@ -1,3 +1,4 @@
+'use strict';
 
 module.exports =  class UserDto {
   id;
@@ -9,4 +10,4 @@ module.exports =  class UserDto {
     this.email = model.email;
     this.firsName = model.firsName;
   }
-}
+};

@@ -4,12 +4,12 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
       id: {
-        type: Sequelize.UUID, 
-        primaryKey: true, 
+        type: Sequelize.UUID,
+        primaryKey: true,
         allowNull: false,
         references: {
           model: 'token',
-          key: "user_id"
+          key: 'user_id'
         }
       },
       firsName: {
