@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   CommentPath.init({
     ancestor: DataTypes.INTEGER,
     descendant: DataTypes.INTEGER,
-    path_length: DataTypes.INTEGER
+    pathLength: DataTypes.INTEGER
   }, {
     sequelize,
     timestamps: false,
-    tableName: 'comments_path',
+    tableName: 'commentsPath',
     modelName: 'CommentPath',
   });
   return CommentPath;

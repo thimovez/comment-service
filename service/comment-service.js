@@ -18,9 +18,9 @@ class CommentService {
       return reply;
     }
 
-    const comment = await Comment.create({ content, user_id: user.id, });
+    const comment = await Comment.create({ content, userId: user.id, });
     const path = await CommentPath.create({
-      ancestor: comment.id, descendant: comment.id, path_length: 0
+      ancestor: comment.id, descendant: comment.id, pathLength: 0
     });
 
     return {
@@ -38,10 +38,10 @@ class CommentService {
       throw ApiError.BadRequest('comment does not exist');
     }
 
-    const commentPath = parentComment.path_length;
-    const comment = await Comment.create({ content, user_id: user.id });
+    const commentPath = parentComment.pathLength;
+    const comment = await Comment.create({ content, userId: user.id });
     const path = await CommentPath.create({
-      ancestor: id, descendant: comment.id, path_length: commentPath + 1
+      ancestor: id, descendant: comment.id, pathLength: commentPath + 1
     });
 
     return {
@@ -72,7 +72,7 @@ class CommentService {
   async sortParentComments(value, direction, page) {
     const sortedComments =  await CommentPath.findAll({
       where: {
-        path_length: '0'
+        pathLyength: '0'
       },
       offset: page * 2,
       limit: 2,

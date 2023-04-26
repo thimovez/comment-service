@@ -7,10 +7,6 @@ module.exports = {
         type: Sequelize.UUID,
         primaryKey: true,
         allowNull: false,
-        references: {
-          model: 'token',
-          key: 'user_id'
-        }
       },
       firsName: {
         type: Sequelize.STRING,
@@ -45,7 +41,7 @@ module.exports = {
       refreshToken: {
         type: Sequelize.STRING(260)
       },
-      user_id: {
+      userId: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
@@ -73,7 +69,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
-      user_id: {
+      userId: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
@@ -91,7 +87,7 @@ module.exports = {
       }
     });
 
-    await queryInterface.createTable('comments_path', {
+    await queryInterface.createTable('commentsPath', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -113,13 +109,13 @@ module.exports = {
           key: 'id'
         }
       },
-      path_length: {
+      pathLength: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       }
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropAllTables;
+    await queryInterface.dropAllTables();
   }
 };
