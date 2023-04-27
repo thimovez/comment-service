@@ -10,15 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      File.belongsTo(models.Comment);
+      File.belongsTo(models.Comment, { foreignKey: 'commentId' });
     }
   }
   File.init({
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      allowNull: true,
-    },
     path: {
       type: DataTypes.STRING,
       allowNull: true
@@ -37,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
+    timestamps: false,
     tableName: 'files',
     modelName: 'File',
   });
