@@ -5,28 +5,26 @@ const User = require('../models/user');
 const fileService = require('./file-service');
 
 class CommentService {
-  async createComment(id, content, user, file) {
-    if (typeof file !== 'undefined') {
-      const fileData = fileService.getFileFormat(file);
-      fileService.verifyFileFormat(fileData);
-
-      return fileData;
-    }
-
+  async createComment(id, content, user, f) {
+    /* If user send comment without id it is main comment
+    if with id it is parent comment*/
     if (typeof id !== 'undefined') {
       const reply = await this.createReply(id, content, user);
       return reply;
     }
 
-    const comment = await Comment.create({ content, userId: user.id, });
+    const comment = await Comment.create({ content, userId: user.id });
     const path = await CommentPath.create({
       ancestor: comment.id, descendant: comment.id, pathLength: 0
     });
+    // This service create file table if user attach file to comment
+    const file = await fileService.attachedFile(f, comment.id);
 
     return {
       user,
       comment,
-      path
+      path,
+      file
     };
   }
 
