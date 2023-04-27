@@ -14,6 +14,7 @@ class FileService {
 
       return file;
     }
+
     return f = {};
   }
 
