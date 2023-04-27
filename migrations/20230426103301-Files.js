@@ -8,6 +8,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: true,
+        autoIncrement: true,
       },
       path: {
         type: Sequelize.STRING,
@@ -19,10 +20,10 @@ module.exports = {
       },
       commentId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'comments',
-          key: 'id',
+          key: 'id'
         }
       }
     });
