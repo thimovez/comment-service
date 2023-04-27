@@ -1,10 +1,24 @@
 'use strict';
 const ApiError = require('../exceptions/api.error');
 const sharp = require('sharp');
+const { File } = require('../models');
 
 class FileService {
+  async attachedFile(f, id) {
+    if (typeof f !== 'undefined') {
+      // const fileData = this.getFileFormat(f);
+      // const format = this.verifyFileFormat(fileData);
+      const file = await File.create({
+        path: f.path, type: f.mimetype, commentId: id
+      });
+
+      return file;
+    }
+    return f = {};
+  }
+
   getFileFormat(file) {
-    const mimetypeData = file.mimetype.split('/');
+    const mimetypeData = file.mimetype.split('.');
     const format = mimetypeData[mimetypeData.length - 1];
 
     return {
