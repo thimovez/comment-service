@@ -10,12 +10,12 @@ module.exports = {
         allowNull: true,
         autoIncrement: true,
       },
-      path: {
+      type: {
         type: Sequelize.STRING,
         allowNull: true
       },
-      type: {
-        type: Sequelize.STRING,
+      buffer: {
+        type: Sequelize.BLOB,
         allowNull: true
       },
       commentId: {

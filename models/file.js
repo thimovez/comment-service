@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   File.init({
-    path: {
+    type: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    type: {
-      type: DataTypes.STRING,
+    buffer: {
+      type: DataTypes.BLOB,
       allowNull: true
     },
     commentId: {
