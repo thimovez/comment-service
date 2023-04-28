@@ -6,10 +6,9 @@ const { File } = require('../models');
 class FileService {
   async attachedFile(f, id) {
     if (typeof f !== 'undefined') {
-      // const fileData = this.getFileFormat(f);
-      // const format = this.verifyFileFormat(fileData);
+      const fileType = this.identifyFileType(f);
       const file = await File.create({
-        path: f.path, type: f.mimetype, commentId: id
+        path: f.path, type: fileType, commentId: id
       });
 
       return file;
@@ -18,35 +17,29 @@ class FileService {
     return f = {};
   }
 
-  getFileFormat(file) {
-    const mimetypeData = file.mimetype.split('.');
-    const format = mimetypeData[mimetypeData.length - 1];
+  identifyFileType(f) {
+    const type = f.mimetype;
+    if (type === 'image/gif' || type === 'image/jpg' || type === 'image/png') {
+      this.verifyImgSize(f);
 
-    return {
-      file,
-      format
-    };
-  }
-
-  verifyFileFormat(fileData) {
-    const { file, format } = fileData;
-    if (format === 'gif' || format === 'jpg' || format === 'png') {
-      const image = this.verifyImgSize(file);
-
-      return image;
+      return type;
     }
 
-    if (fileData.format === 'txt') {
-      const text = this.verifyFileSize(file);
+    if (type === 'text/plain') {
+      this.verifyFileSize(f);
 
-      return text;
+      return type;
     }
 
-    throw ApiError.BadRequest('unexpected file format');
+    throw ApiError('unsupported type');
   }
 
   verifyFileSize(file) {
-    if (file.size <= 100000) {
+    if (file.size === 0) {
+      throw ApiError.BadRequest('file can not be empty');
+    }
+
+    if (file.size > 100000) {
       throw ApiError.BadRequest('file size is so big');
     }
 
