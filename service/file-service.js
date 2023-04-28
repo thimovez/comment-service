@@ -6,9 +6,10 @@ const { File } = require('../models');
 class FileService {
   async attachedFile(f, id) {
     if (typeof f !== 'undefined') {
-      const fileType = this.identifyFileType(f);
+      // console.log(f);
+      // const fileType = this.identifyFileType(f);
       const file = await File.create({
-        path: f.path, type: fileType, commentId: id
+        path: f.path, type: f.mimetype, commentId: id
       });
 
       return file;
@@ -19,8 +20,8 @@ class FileService {
 
   identifyFileType(f) {
     const type = f.mimetype;
-    if (type === 'image/gif' || type === 'image/jpg' || type === 'image/png') {
-      this.verifyImgSize(f);
+    if (type === 'image/gif' || type === 'image/jpeg' || type === 'image/png') {
+      // this.verifyImgSize1(f);
 
       return type;
     }
@@ -34,33 +35,47 @@ class FileService {
     throw ApiError('unsupported type');
   }
 
-  verifyFileSize(file) {
-    if (file.size === 0) {
+  verifyFileSize(f) {
+    if (f.size === 0) {
       throw ApiError.BadRequest('file can not be empty');
     }
 
-    if (file.size > 100000) {
+    if (f.size > 100000) {
       throw ApiError.BadRequest('file size is so big');
     }
 
-    return file;
+    return f;
   }
 
-  async verifyImgSize(file) {
-    const metadata = await sharp(file.path).metadata();
+  async verifyImgSize1(f) {
+    const metadata = await sharp(f.path).metadata();
     if (metadata.width > 320 || metadata.height > 240) {
-      await sharp(file.path)
+      await sharp(f.path)
         .resize(320, 240, {
           fit: 'contain'
         })
-        .toFile(`./uploads/${file.encoding}`, (err) => {
+        .toFile('./public/uploads/')
+        .then(data => data);
+    }
+
+    return f;
+  }
+
+  async verifyImgSize(f) {
+    const metadata = await sharp(f.path).metadata();
+    if (metadata.width > 320 || metadata.height > 240) {
+      await sharp(f.path)
+        .resize(320, 240, {
+          fit: 'contain'
+        })
+        .toFile(f.filename, err => {
           if (err) {
-            console.log(err);
+            throw ApiError(err);
           }
         });
     }
 
-    return file;
+    return f;
   }
 }
 
