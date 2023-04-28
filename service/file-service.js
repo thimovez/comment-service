@@ -55,7 +55,7 @@ class FileService {
           fit: 'contain'
         })
         .toBuffer();
-      fs.unlink(f.path);
+      fs.unlinkSync(f.path);
       return buffer;
     }
 
