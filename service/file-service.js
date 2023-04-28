@@ -1,15 +1,15 @@
 'use strict';
-const ApiError = require('../exceptions/api.error');
+const fs = require('node:fs');
 const sharp = require('sharp');
+const ApiError = require('../exceptions/api.error');
 const { File } = require('../models');
 
 class FileService {
   async attachedFile(f, id) {
     if (typeof f !== 'undefined') {
-      // console.log(f);
-      // const fileType = this.identifyFileType(f);
+      const buffer = this.identifyFileType(f);
       const file = await File.create({
-        path: f.path, type: f.mimetype, commentId: id
+        path: f.path, type: f.mimetype, buffer, commentId: id
       });
 
       return file;
@@ -21,9 +21,9 @@ class FileService {
   identifyFileType(f) {
     const type = f.mimetype;
     if (type === 'image/gif' || type === 'image/jpeg' || type === 'image/png') {
-      // this.verifyImgSize1(f);
+      const buffer = this.verifyImgSize(f);
 
-      return type;
+      return buffer;
     }
 
     if (type === 'text/plain') {
@@ -47,32 +47,16 @@ class FileService {
     return f;
   }
 
-  async verifyImgSize1(f) {
-    const metadata = await sharp(f.path).metadata();
-    if (metadata.width > 320 || metadata.height > 240) {
-      await sharp(f.path)
-        .resize(320, 240, {
-          fit: 'contain'
-        })
-        .toFile('./public/uploads/')
-        .then(data => data);
-    }
-
-    return f;
-  }
-
   async verifyImgSize(f) {
     const metadata = await sharp(f.path).metadata();
     if (metadata.width > 320 || metadata.height > 240) {
-      await sharp(f.path)
+      const buffer = await sharp(f.path)
         .resize(320, 240, {
           fit: 'contain'
         })
-        .toFile(f.filename, err => {
-          if (err) {
-            throw ApiError(err);
-          }
-        });
+        .toBuffer();
+      fs.unlink(f.path);
+      return buffer;
     }
 
     return f;
