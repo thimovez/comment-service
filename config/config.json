@@ -3,21 +3,21 @@
     "username": "vkovalenko",
     "password": "root",
     "database": "commentservice",
-    "host": "172.25.0.2",
+    "host": "db",
     "dialect": "postgres"
   },
   "test": {
     "username": "vkovalenko",
     "password": "root",
     "database": "commentservice_test",
-    "host": "172.25.0.2",
+    "host": "db",
     "dialect": "postgres"
   },
   "production": {
     "username": "vkovalenko",
     "password": "root",
     "database": "commentservice_development",
-    "host": "172.25.0.2",
+    "host": "db",
     "dialect": "postgres"
   }
 }
