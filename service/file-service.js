@@ -59,7 +59,7 @@ class FileService {
       return buffer;
     }
 
-    return f;
+    return f.buffer;
   }
 }
 
