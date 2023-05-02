@@ -16,17 +16,24 @@ class UserService {
     const id = uuidv4();
     const hashPassword = await bcrypt.hash(password, 3);
 
-    const user = await User.create({
+    const userData = await User.create({
       id, firsName: name, email, password: hashPassword
-    });
-    const userDto = new UserDto(user);
+    }, { returning: ['id', 'firsName', 'email', 'createdAt' ] });
+    const userDto = new UserDto(userData);
 
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
+    const user = {
+      id: userData.id,
+      name: userData.firsName,
+      email: userData.email,
+      createdAt: userData.createdAt
+    };
+
     return {
-      ...tokens,
-      user
+      user,
+      ...tokens
     };
   }
 
