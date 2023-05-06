@@ -38,31 +38,39 @@ class UserService {
   }
 
   async login(email, password) {
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
+    const existUser = await User.findOne({ where: { email } });
+    if (!existUser) {
       throw ApiError.BadRequest('User with this email address not found');
     }
 
-    const usPassEquals = await bcrypt.compare(password, user.password);
+    const usPassEquals = await bcrypt.compare(password, existUser.password);
     if (!usPassEquals) {
       throw ApiError.BadRequest('You have entered an incorrect password.');
     }
 
-    const userDto = new UserDto(user);
+    const userDto = new UserDto(existUser);
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
+    const user = {
+      id: userDto.id,
+      name: userDto.firsName,
+      email: userDto.email
+    };
+
     return {
-      ...tokens,
-      user: userDto
+      user,
+      ...tokens
     };
   }
 
   async logout(refreshToken) {
     const token = await tokenService.removeToken(refreshToken);
 
-    return token;
+    return {
+      response: token
+    };
   }
 
   async refresh(refreshToken) {
@@ -74,15 +82,15 @@ class UserService {
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError();
     }
-    const userId = userData.id;
-    const user = await User.findOne({ where: { userId } });
+    const id = userData.id;
+    const user = await User.findOne({ where: { id } });
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
     return {
-      ...tokens,
-      user: userDto
+      user: userDto,
+      ...tokens
     };
   }
 
