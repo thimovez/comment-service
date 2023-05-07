@@ -5,14 +5,7 @@ const User = require('../models/user');
 const fileService = require('./file-service');
 
 class CommentService {
-  async createComment(id, content, user, f) {
-    /* If user send comment without id it is main comment
-    if with id it is parent comment*/
-    if (typeof id !== 'undefined') {
-      const reply = await this.createReply(id, content, user);
-      return reply;
-    }
-
+  async createComment(content, user, f) {
     const comment = await Comment.create({ content, userId: user.id });
     const path = await CommentPath.create({
       ancestor: comment.id, descendant: comment.id, pathLength: 0
@@ -28,7 +21,7 @@ class CommentService {
     };
   }
 
-  async createReply(id, content, user) {
+  async createReply(id, content, user, f) {
     const parentComment = await CommentPath.findOne({
       where: { descendant: id }
     });
@@ -41,11 +34,13 @@ class CommentService {
     const path = await CommentPath.create({
       ancestor: id, descendant: comment.id, pathLength: commentPath + 1
     });
+    const file = await fileService.attachedFile(f, comment.id);
 
     return {
       user,
       comment,
-      path
+      path,
+      file
     };
   }
 
