@@ -16,6 +16,21 @@ class CommentController {
     }
   }
 
+  async createReply(req, res, next) {
+    try {
+      const id = req.params.id;
+      const user = req.user;
+      const { content } = req.body;
+      const f = req.file;
+
+      const comment = await commentService.createReply(id, content, user, f);
+
+      res.json(comment);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async sortParentComments(req, res, next) {
     try {
       const page = parseInt(req.body.page) - 1 || 0;
