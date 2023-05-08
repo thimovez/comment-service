@@ -5,10 +5,10 @@ class CommentController {
   async createComment(req, res, next) {
     try {
       const user = req.user;
-      const { id, content } = req.body;
+      const { content } = req.body;
       const f = req.file;
 
-      const comment = await commentService.createComment(id, content, user, f);
+      const comment = await commentService.createComment(content, user, f);
 
       res.json(comment);
     } catch (e) {
@@ -40,6 +40,18 @@ class CommentController {
       const sortedComments = await commentService.sortBy(sort, direction, page);
 
       res.json(sortedComments);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async deleteComments(req, res, next) {
+    try {
+      const id = req.params.id;
+
+      const r = await commentService.deleteComments(id);
+
+      res.json(r);
     } catch (e) {
       next(e);
     }

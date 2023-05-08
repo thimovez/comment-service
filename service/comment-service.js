@@ -86,6 +86,16 @@ class CommentService {
     return sortedComments;
   }
 
+  async deleteComments(id) {
+    await Comment.destroy({ where: { id }, individualHooks: true });
+
+    const res = {
+      res: 'succes'
+    };
+
+    return res;
+  }
+
 }
 
 module.exports = new CommentService();

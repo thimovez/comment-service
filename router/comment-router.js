@@ -8,5 +8,6 @@ const commentController = require('../controllers/comment-controller');
 router.post('/', authMiddleware, upload, commentController.createComment);
 router.post('/:id', authMiddleware, upload, commentController.createReply);
 router.post('/sort', authMiddleware, commentController.sortParentComments);
+router.delete('/delete/:id', authMiddleware, commentController.deleteComments);
 
 module.exports = router;
