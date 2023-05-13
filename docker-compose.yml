@@ -1,16 +1,15 @@
 version: "3.9"
 services:
-  web:
+  app:
     build: .
     ports:
-      - "8080:8080"
+      - 8080:8080
+      - 9229:9229
     volumes:
       - .:/app
     command: npm run dev
     depends_on:
       - db
-    environment:
-        DEBUG: comment-service:*
   db:
     image: "postgres:latest"
     ports:
