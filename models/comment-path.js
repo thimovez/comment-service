@@ -10,9 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      CommentPath.belongsTo(models.Comment, {
-        foreignKey: 'descendant'
-      });
+      CommentPath.belongsTo(models.Comment, { foreignKey: 'ancestor' });
+      CommentPath.belongsTo(models.Comment, { foreignKey: 'descendant' });
     }
   }
   CommentPath.init({

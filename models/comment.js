@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Comment.belongsTo(models.User, { foreignKey: 'userId' });
       Comment.hasMany(models.CommentPath, { foreignKey: 'ancestor' });
+      Comment.hasMany(models.CommentPath, { foreignKey: 'descendant' });
       Comment.hasOne(models.File, { foreignKey: 'commentId' });
     }
   }
