@@ -1,4 +1,4 @@
-FROM node:19
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["nodemon", "index.js"]`
+CMD ["npm", "run", "dev"]`
