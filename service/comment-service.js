@@ -2,45 +2,64 @@
 const ApiError = require('../exceptions/api.error');
 const { Comment, CommentPath } = require('../models');
 const User = require('../models/user');
-const fileService = require('./file-service');
+// const fileService = require('./file-service');
+const { sequelize } = require('../models/index');
 
 class CommentService {
-  async createComment(content, user, f) {
-    const comment = await Comment.create({ content, userId: user.id });
+  async createComment(content, user) {
+    const comment = await Comment.create({
+      content, userId: user.id
+    });
     const path = await CommentPath.create({
       ancestor: comment.id, descendant: comment.id, pathLength: 0
     });
     // This service create file table if user attach file to comment
-    const file = await fileService.attachedFile(f, comment.id);
+    // const file = await fileService.attachedFile(f, comment.id);
 
     return {
       user,
       comment,
-      path,
-      file
+      path
     };
   }
 
-  async createReply(id, content, user, f) {
-    const parentComment = await CommentPath.findOne({
-      where: { descendant: id }
+  async createReply(id, content, user) {
+    const parentComment = await Comment.findOne({
+      where: { id }
     });
     if (!parentComment) {
       throw ApiError.BadRequest('comment does not exist');
     }
 
-    const commentPath = parentComment.pathLength;
     const comment = await Comment.create({ content, userId: user.id });
     const path = await CommentPath.create({
-      ancestor: id, descendant: comment.id, pathLength: commentPath + 1
+      ancestor: comment.id, descendant: comment.id, pathLength: 0
     });
-    const file = await fileService.attachedFile(f, comment.id);
 
+    const p = await sequelize.query(
+      `INSERT INTO "commentsPath" (ancestor, descendant, "pathLength")
+      SELECT ancestor, ?, "pathLength"  + 1
+      FROM "commentsPath"
+      WHERE descendant = ? RETURNING *`, {
+        replacements: [comment.id, id]
+      }
+    );
+    // const commentPath = parentComment.pathLength;
+    // const comment = await Comment.create({ content, userId: user.id });
+    // const path = await CommentPath.create({
+    //   ancestor: id, descendant: comment.id, pathLength: commentPath + 1
+    // });
+    // const displayOrder = parentComment.displayOrder + 1;
+    // const indentLevel = parentComment.indentLevel + 1;
+    // const reply = await Comment.create({
+    //   content, userId: user.id, displayOrder, indentLevel
+    // });
+    // const file = await fileService.attachedFile(f, reply.id);
+    // getTreeofCommentsByID
     return {
       user,
-      comment,
       path,
-      file
+      p
     };
   }
 

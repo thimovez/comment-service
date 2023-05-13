@@ -6,9 +6,9 @@ class CommentController {
     try {
       const user = req.user;
       const { content } = req.body;
-      const f = req.file;
+      // const f = req.file;
 
-      const comment = await commentService.createComment(content, user, f);
+      const comment = await commentService.createComment(content, user);
 
       res.json(comment);
     } catch (e) {
@@ -21,9 +21,9 @@ class CommentController {
       const id = req.params.id;
       const user = req.user;
       const { content } = req.body;
-      const f = req.file;
+      // const f = req.file;
 
-      const comment = await commentService.createReply(id, content, user, f);
+      const comment = await commentService.createReply(id, content, user);
 
       res.json(comment);
     } catch (e) {
