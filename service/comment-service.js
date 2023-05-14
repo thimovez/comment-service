@@ -44,16 +44,6 @@ class CommentService {
         replacements: [comment.id, id]
       }
     );
-    // const commentPath = parentComment.pathLength;
-    // const comment = await Comment.create({ content, userId: user.id });
-    // const path = await CommentPath.create({
-    //   ancestor: id, descendant: comment.id, pathLength: commentPath + 1
-    // });
-    // const displayOrder = parentComment.displayOrder + 1;
-    // const indentLevel = parentComment.indentLevel + 1;
-    // const reply = await Comment.create({
-    //   content, userId: user.id, displayOrder, indentLevel
-    // });
     // const file = await fileService.attachedFile(f, reply.id);
     // getTreeofCommentsByID
     return {
@@ -106,10 +96,19 @@ class CommentService {
   }
 
   async deleteComments(id) {
-    await Comment.destroy({ where: { id }, individualHooks: true });
+    await CommentPath.destroy({ where: { descendant: id } });
+    await sequelize.query(
+      `DELETE FROM "commentsPath"
+      WHERE descendant IN (
+      SELECT descendant
+      FROM "commentsPath"
+      WHERE ancestor = ?);`,
+      { replacements: [id] }
+    );
+    await Comment.destroy({ where: { id } });
 
     const res = {
-      res: 'succes'
+      res: 'comment deleted'
     };
 
     return res;
