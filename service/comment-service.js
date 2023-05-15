@@ -96,16 +96,15 @@ class CommentService {
   }
 
   async deleteComments(id) {
-    await CommentPath.destroy({ where: { descendant: id } });
     await sequelize.query(
-      `DELETE FROM "commentsPath"
-      WHERE descendant IN (
-      SELECT descendant
-      FROM "commentsPath"
-      WHERE ancestor = ?);`,
+      `DELETE FROM "comments" 
+      WHERE id IN (
+          SELECT descendant FROM "comments" c
+          JOIN "commentsPath" cp ON c.id = cp.descendant
+          WHERE cp.ancestor = ?
+      );`,
       { replacements: [id] }
     );
-    await Comment.destroy({ where: { id } });
 
     const res = {
       res: 'comment deleted'
