@@ -11,8 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Comment.belongsTo(models.User, { foreignKey: 'userId' });
-      Comment.hasMany(models.CommentPath, { foreignKey: 'ancestor' });
-      Comment.hasMany(models.CommentPath, { foreignKey: 'descendant' });
+      Comment.hasMany(models.CommentPath, {
+        foreignKey: 'ancestor', onDelete: 'CASCADE'
+      });
+      Comment.hasMany(models.CommentPath, {
+        foreignKey: 'descendant', onDelete: 'CASCADE'
+      });
       Comment.hasOne(models.File, { foreignKey: 'commentId' });
     }
   }
