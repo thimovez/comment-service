@@ -53,6 +53,29 @@ class CommentService {
     };
   }
 
+  // Достать только родительские комментарии
+  // Обновлять контент комментария
+  async getTreeOfComments(id) {
+    await sequelize.query(
+      `SELECT
+      c.id,
+      c."content",
+      cp."pathLength",
+      cp.ancestor,
+      cp.descendant,
+      array_agg(t.ancestor ORDER BY t.ancestor)
+      FROM
+      "comments" AS c
+      JOIN "commentsPath" AS cp
+      ON c.id = cp.descendant
+      JOIN "commentsPath" AS t
+      ON t.descendant = cp.descendant
+      WHERE cp.ancestor = ?
+      GROUP BY c.id, cp.id;`,
+      { replacements: [id] }
+    );
+  }
+
   async sortBy(sort, direction, page) {
     if (sort === 'firsName') {
       const sortedComments = this.sortParentComments(sort, direction, page);
@@ -74,7 +97,7 @@ class CommentService {
   async sortParentComments(value, direction, page) {
     const sortedComments =  await CommentPath.findAll({
       where: {
-        pathLyength: '0'
+        pathLength: '0'
       },
       offset: page * 2,
       limit: 2,
