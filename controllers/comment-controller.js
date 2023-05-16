@@ -31,6 +31,18 @@ class CommentController {
     }
   }
 
+  async getTreeOfComments(req, res, next) {
+    try {
+      const id = req.params.id;
+
+      const commentTree = await commentService.getTreeOfComments(id);
+
+      res.json(commentTree);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async sortParentComments(req, res, next) {
     try {
       const page = parseInt(req.body.page) - 1 || 0;
