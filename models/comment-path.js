@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
   CommentPath.init({
     ancestor: DataTypes.INTEGER,
     descendant: DataTypes.INTEGER,
-    pathLength: DataTypes.INTEGER
+    pathLength: DataTypes.INTEGER,
+    isParent: DataTypes.BOOLEAN
   }, {
     sequelize,
     timestamps: false,
