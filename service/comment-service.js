@@ -8,10 +8,14 @@ const { sequelize } = require('../models/index');
 class CommentService {
   async createComment(content, user) {
     const comment = await Comment.create({
-      content, userId: user.id
+      content,
+      userId: user.id
     });
     const path = await CommentPath.create({
-      ancestor: comment.id, descendant: comment.id, pathLength: 0
+      ancestor: comment.id,
+      descendant: comment.id,
+      pathLength: 0,
+      isParent: true
     });
     // This service create file table if user attach file to comment
     // const file = await fileService.attachedFile(f, comment.id);
