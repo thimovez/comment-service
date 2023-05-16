@@ -10,6 +10,7 @@ router.post('/:id', authMiddleware, upload, commentController.createReply);
 router.post('/sort', authMiddleware, commentController.sortParentComments);
 router.get('/:id', authMiddleware, commentController.getTreeOfComments);
 router.get('/', commentController.getParentComments);
+router.put('/:id', authMiddleware, commentController.updateCommentContent);
 router.delete('/delete/:id', authMiddleware, commentController.deleteComments);
 
 module.exports = router;
