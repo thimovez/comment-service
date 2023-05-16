@@ -57,7 +57,24 @@ class CommentService {
     };
   }
 
-  // Достать только родительские комментарии
+  async getParentComments() {
+    const parentComment = await sequelize.query(
+      `SELECT 
+      c.id,
+      c."content",
+      c."createdAt",
+      cp."pathLength"
+      FROM "comments" AS c
+      INNER JOIN "commentsPath" AS cp 
+      ON c.id = cp.descendant
+      WHERE cp."isParent" = true;`,
+      {
+        type: sequelize.QueryTypes.SELECT
+      }
+    );
+
+    return parentComment;
+  }
   // Обновлять контент комментария
   async getTreeOfComments(id) {
     const commentTree = await sequelize.query(
