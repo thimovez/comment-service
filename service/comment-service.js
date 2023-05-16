@@ -75,7 +75,7 @@ class CommentService {
 
     return parentComment;
   }
-  // Обновлять контент комментария
+
   async getTreeOfComments(id) {
     const commentTree = await sequelize.query(
       `SELECT
@@ -142,6 +142,20 @@ class CommentService {
     });
 
     return sortedComments;
+  }
+
+  async updateCommentContent(id, content) {
+    const comment = await sequelize.query(
+      `UPDATE "comments" AS c
+      SET "content" = ?, "updatedAt" = now() 
+      WHERE c.id = ?
+      RETURNING c."content", c."updatedAt";`,
+      {
+        replacements: [content, id],
+        type: sequelize.QueryTypes.UPDATE
+      }
+    );
+    return comment[0][0];
   }
 
   async deleteComments(id) {
