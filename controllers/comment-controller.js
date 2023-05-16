@@ -67,6 +67,18 @@ class CommentController {
       next(e);
     }
   }
+  async updateCommentContent(req, res, next) {
+    try {
+      const id = req.params.id;
+      const { content } = req.body;
+
+      const comment = await commentService.updateCommentContent(id, content);
+
+      res.json(comment);
+    } catch (e) {
+      next(e);
+    }
+  }
 
   async deleteComments(req, res, next) {
     try {
