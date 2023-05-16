@@ -56,7 +56,7 @@ class CommentService {
   // Достать только родительские комментарии
   // Обновлять контент комментария
   async getTreeOfComments(id) {
-    await sequelize.query(
+    const commentTree = await sequelize.query(
       `SELECT
       c.id,
       c."content",
@@ -72,8 +72,13 @@ class CommentService {
       ON t.descendant = cp.descendant
       WHERE cp.ancestor = ?
       GROUP BY c.id, cp.id;`,
-      { replacements: [id] }
+      {
+        replacements: [id],
+        type: sequelize.QueryTypes.SELECT
+      }
     );
+
+    return commentTree;
   }
 
   async sortBy(sort, direction, page) {
