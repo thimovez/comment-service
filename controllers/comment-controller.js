@@ -1,4 +1,5 @@
 'use strict';
+const ApiError = require('../exceptions/api.error');
 const commentService = require('../service/comment-service');
 
 class CommentController {
@@ -28,6 +29,16 @@ class CommentController {
       res.json(comment);
     } catch (e) {
       next(e);
+    }
+  }
+
+  async getParentComments(req, res) {
+    try {
+      const parentComments = await commentService.getParentComments();
+
+      res.json(parentComments);
+    } catch (e) {
+      throw ApiError.BadRequest(e);
     }
   }
 
