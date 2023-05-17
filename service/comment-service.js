@@ -1,7 +1,7 @@
 'use strict';
 const ApiError = require('../exceptions/api.error');
-const { Comment, CommentPath } = require('../models');
-const User = require('../models/user');
+const { Comment, CommentPath, User } = require('../models');
+// const User = require('../models/user');
 // const fileService = require('./file-service');
 const { sequelize } = require('../models/index');
 
@@ -102,28 +102,10 @@ class CommentService {
     return commentTree;
   }
 
-  async sortBy(sort, direction, page) {
-    if (sort === 'firsName') {
-      const sortedComments = this.sortParentComments(sort, direction, page);
-
-      return sortedComments;
-    }
-
-    if (sort === 'createdAt') {
-      const sortedComments = this.sortParentComments(sort, direction, page);
-
-      return sortedComments;
-    }
-
-    const sortedComments = this.sortParentComments(sort, direction, page);
-
-    return sortedComments;
-  }
-
-  async sortParentComments(value, direction, page) {
+  async sortParentComments(sortBy, order, page) {
     const sortedComments =  await CommentPath.findAll({
       where: {
-        pathLength: '0'
+        isParent: true
       },
       offset: page * 2,
       limit: 2,
@@ -133,7 +115,7 @@ class CommentService {
           include: [
             {
               model: User,
-              order: [value, direction]
+              order: [sortBy, order]
             },
           ]
         }
