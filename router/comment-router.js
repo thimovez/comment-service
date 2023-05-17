@@ -7,7 +7,7 @@ const commentController = require('../controllers/comment-controller');
 
 router.post('/', authMiddleware, upload, commentController.createComment);
 router.post('/:id', authMiddleware, upload, commentController.createReply);
-router.post('/sort', authMiddleware, commentController.sortParentComments);
+router.get('/sort', commentController.sortParentComments);
 router.get('/:id', authMiddleware, commentController.getTreeOfComments);
 router.get('/', commentController.getParentComments);
 router.put('/:id', authMiddleware, commentController.updateCommentContent);
