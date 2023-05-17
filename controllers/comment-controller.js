@@ -54,19 +54,20 @@ class CommentController {
     }
   }
 
-  async sortParentComments(req, res, next) {
+  async sortParentComments(req, res) {
     try {
-      const page = parseInt(req.body.page) - 1 || 0;
-      const direction = req.body.direction || 'desc';
-      const sort = req.body.sort || 'email';
+      const page = parseInt(req.params.page) - 1 || 0;
+      const order = req.params.direction || 'desc';
+      const sortBy = req.params.sort || 'email';
 
-      const sortedComments = await commentService.sortBy(sort, direction, page);
+      const orderedComments = await commentService.sortParentComments(sortBy, order, page);
 
-      res.json(sortedComments);
+      res.json(orderedComments);
     } catch (e) {
-      next(e);
+      throw ApiError.BadRequest(e);
     }
   }
+
   async updateCommentContent(req, res, next) {
     try {
       const id = req.params.id;
