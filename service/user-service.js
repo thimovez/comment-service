@@ -65,11 +65,12 @@ class UserService {
     };
   }
 
-  async logout(refreshToken) {
-    const token = await tokenService.removeToken(refreshToken);
+  async logout(refreshToken, accessToken) {
+    await tokenService.removeToken(refreshToken);
+    await tokenService.pushAccessTokenToTrash(accessToken);
 
     return {
-      response: token
+      response: 'user logout'
     };
   }
 
@@ -88,6 +89,7 @@ class UserService {
     const tokens = tokenService.generateTokens({ ...userDto });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
+
     return {
       user: userDto,
       ...tokens
