@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     ancestor: DataTypes.INTEGER,
     descendant: DataTypes.INTEGER,
     pathLength: DataTypes.INTEGER,
-    isParent: DataTypes.BOOLEAN
   }, {
     sequelize,
     timestamps: false,
