@@ -1,4 +1,3 @@
-'use strict';
 const ApiError = require('../exceptions/api.error');
 const { Comment, CommentPath, User } = require('../models');
 // const User = require('../models/user');

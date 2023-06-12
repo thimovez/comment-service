@@ -1,4 +1,3 @@
-'use strict';
 const fs = require('node:fs');
 const sharp = require('sharp');
 const ApiError = require('../exceptions/api.error');

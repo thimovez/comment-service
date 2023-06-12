@@ -1,4 +1,3 @@
-'use strict';
 const jwt = require('jsonwebtoken');
 const { Token } = require('../models');
 
@@ -20,7 +19,7 @@ class TokenService {
   validateAccessToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-      console.log(userData);
+
       return userData;
     } catch (e) {
       return null;
@@ -66,7 +65,12 @@ class TokenService {
     /*
       Проверить валиден ли токен, если да то отравить в помойку
     */
-    return accessToken;
+    const userData = this.validateAccessToken(accessToken);
+    if (!userData) {
+      return accessToken;
+    }
+
+    // поместить в помойку
   }
 
   findAccessToken(accessToken) {

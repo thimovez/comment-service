@@ -1,4 +1,3 @@
-'use strict';
 const ApiError = require('../exceptions/api.error');
 const tokenService = require('../service/token-service');
 

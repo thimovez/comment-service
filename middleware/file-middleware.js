@@ -1,4 +1,3 @@
-'use strict';
 const ApiError = require('../exceptions/api.error');
 const multer  = require('multer');
 const path = require('node:path');

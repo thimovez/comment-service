@@ -1,4 +1,3 @@
-'use strict';
 const userService = require('../service/user-service');
 
 class UserController {
@@ -35,8 +34,10 @@ class UserController {
 
   async logout(req, res, next) {
     try {
+      const accessToken = req.get('Authorization').split(' ')[1];
       const refreshToken = req.cookies.refreshToken;
-      const token = await userService.logout(refreshToken);
+
+      const token = await userService.logout(refreshToken, accessToken);
 
       res.clearCookie('refreshToken');
 

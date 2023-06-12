@@ -2,7 +2,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Token extends Model {
+  class TokenTrash extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,17 +10,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Token.belongsTo(models.User, { foreignKey: 'userId' });
     }
   }
-  Token.init({
-    refreshToken: {
-      type: DataTypes.STRING(260)
+  TokenTrash.init({
+    accessTokens: {
+      type: DataTypes.STRING()
     }
   }, {
     sequelize,
-    tableName: 'tokens',
-    modelName: 'Token',
+    tableName: 'accessTokensTrash',
+    modelName: 'AccessTokensTrash',
   });
-  return Token;
+  return TokenTrash;
 };

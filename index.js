@@ -1,4 +1,3 @@
-'use strict';
 require('dotenv').config();
 const { sequelize } = require('./models');
 const app = require('./middleware/index');
