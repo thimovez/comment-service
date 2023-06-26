@@ -63,7 +63,7 @@ class TokenService {
 
   /*
     Check if the token is valid, if yes, then poison it in the trash
-    if not do nothing
+    if not, do nothing
   */
   async pushAccessTokenToTrash(accessToken) {
     const userData = this.validateAccessToken(accessToken);
