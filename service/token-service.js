@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Token } = require('../models');
+const { Token, TokenTrash } = require('../models');
 
 class TokenService {
   generateTokens(payload) {
@@ -61,16 +61,19 @@ class TokenService {
     return tokenData;
   }
 
-  pushAccessTokenToTrash(accessToken) {
-    /*
-      Проверить валиден ли токен, если да то отравить в помойку
-    */
+  /*
+    Check if the token is valid, if yes, then poison it in the trash
+    if not do nothing
+  */
+  async pushAccessTokenToTrash(accessToken) {
     const userData = this.validateAccessToken(accessToken);
     if (!userData) {
-      return accessToken;
+      return null;
     }
 
-    // поместить в помойку
+    const expiredToken = await TokenTrash.create({ accessToken });
+
+    return `Token ${expiredToken} placed in token trash`;
   }
 
   findAccessToken(accessToken) {
