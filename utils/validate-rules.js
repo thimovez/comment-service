@@ -3,6 +3,7 @@ const { check } = require('express-validator');
 module.exports = {
   regUserRules: [
     check('name')
+      .exists().withMessage('field must exist')
       .notEmpty().withMessage('name cannot be empty')
       .isString().withMessage('name should be string only')
       .isLength({
@@ -11,10 +12,13 @@ module.exports = {
       }).withMessage('Name must be at least 5 characters long and string'),
 
     check('email')
+      .exists().withMessage('field must exist')
+      .notEmpty().withMessage('email cannot be empty')
       .isEmail().withMessage('must be in email format')
       .notEmpty().withMessage('field email cannot be empty'),
 
     check('password')
+      .exists().withMessage('field must exist')
       .isLength({
         min: 8,
         max: 20
