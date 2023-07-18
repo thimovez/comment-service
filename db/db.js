@@ -2,7 +2,7 @@ const { sequelize } = require('../models/index');
 
 class DBService {
   // Test the connection
-  async openConnection() {
+  async openConnectionDB() {
     try {
       await sequelize.authenticate()
         .then(() => {
