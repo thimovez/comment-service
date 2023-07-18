@@ -1,21 +1,18 @@
 require('dotenv').config();
 const app = require('./middleware/index');
-const { openConnectionDB } = require('./db/db');
+const {
+  openConnectionDB,
+  closeConnectionDB
+} = require('./db/db');
 
-const server = () => {
-  const PORT = process.env.PORT || 5000;
-
-  app.listen(PORT, () => {
-    console.log(`Server started on http://localhost:${PORT}/`);
-  });
-};
-
+const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   try {
     await openConnectionDB();
-
-    server();
+    app.listen(PORT, () => {
+      console.log(`Server started on http://localhost:${PORT}/`);
+    });
   } catch (error) {
     console.log(error);
   }
@@ -23,3 +20,12 @@ const start = async () => {
 };
 
 start();
+
+process.on('SIGTERM', () => {
+  console.info('SIGTERM signal received.');
+  console.log('Closing http server.');
+  app.close(() => {
+    console.log('Http server closed.');
+    closeConnectionDB();
+  });
+});
