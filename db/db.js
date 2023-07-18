@@ -14,12 +14,13 @@ class DBService {
   }
 
   //Close the connection function
-  async closeConnection() {
+  async closeConnectionDB() {
     try {
       await sequelize.close()
         .then(() => {
-          console.log('Connection closed successfully.');
+          console.log('SQl connection closed successfully.');
         });
+      process.exit(0);
     } catch (err) {
       console.error('Error closing the connection:', err);
     }
