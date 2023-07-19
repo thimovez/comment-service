@@ -25,6 +25,10 @@ class DBService {
       console.error('Error closing the connection:', err);
     }
   }
+
+  async transaction() {
+    return await sequelize.transaction();
+  }
 }
 
 module.exports = new DBService();
