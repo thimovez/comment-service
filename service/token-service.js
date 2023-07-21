@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Token, TokenTrash } = require('../models');
+const tokenRepo = require('../repo/token-repo');
 
 class TokenService {
   generateTokens(payload) {
@@ -36,67 +36,29 @@ class TokenService {
     }
   }
 
-  async saveToken(userId, refreshToken) {
-    const tokenData = await Token.findOne({ where: { userId } });
+  async saveRefreshToken(userId, refreshToken) {
+    const tokenData = await tokenRepo.getRefreshTokenByUserId(userId);
     if (tokenData) {
       tokenData.refreshToken = refreshToken;
-      await tokenData.save();
+      await tokenRepo.updateInstance(tokenData);
       return tokenData;
     }
 
-    const token = await Token.create({ refreshToken, userId });
+    const token = await tokenRepo.createRefreshToken(refreshToken, userId);
 
     return token;
   }
 
-  async removeToken(refreshToken) {
-    const tokenData = await Token.destroy({ where: { refreshToken } });
+  async deleteRefreshToken(refreshToken) {
+    const tokenData = tokenRepo.deleteRefreshToken(refreshToken);
 
     return tokenData;
   }
 
   async findRefreshToken(refreshToken) {
-    const tokenData = await Token.findOne({ where: { refreshToken } });
+    const tokenData = tokenRepo.getRefreshToken(refreshToken);
 
     return tokenData;
-  }
-
-  /*
-    Check if the token is valid, if yes, then poison it in the trash
-    if not, do nothing
-  */
-  async pushAccessTokenToTrash(accessToken) {
-    const userData = this.validateAccessToken(accessToken);
-    if (!userData) {
-      return null;
-    }
-
-    const expiredToken = await TokenTrash.create({ accessToken });
-
-    return `Token ${expiredToken} placed in token trash`;
-  }
-
-  findAccessToken(accessToken) {
-    /*
-      Ищем токен в базе если есть то доступ запрещен по этому токену
-     */
-    return accessToken;
-  }
-
-  countAccessTokensInTrash() {
-    /*
-      Считать количество токенов в базе данных
-      и если условно их больше 5 начинать их удалять
-    */
-    return '';
-  }
-
-  deleteAccessTokenInTrash() {
-    /*
-      Перед тем как удалить - проверить валиден ли токен
-      если да, игнорируем если нет, то удаляем
-    */
-    return '';
   }
 }
 

@@ -1,13 +1,13 @@
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const tokenService = require('./token-service');
-const { User } = require('../models');
+const userRepo = require('../repo/user-repo');
 const UserDto = require('../dtos/user-dto');
 const ApiError = require('../exceptions/api.error');
 
 class UserService {
   async registration(name, email, password) {
-    const candidate = await User.findOne({ where: { email } });
+    const candidate = await userRepo.getUserByEmail(email);
     if (candidate) {
       throw ApiError.BadRequest(`User with email ${email} already exist`);
     }
@@ -15,13 +15,11 @@ class UserService {
     const id = uuidv4();
     const hashPassword = await bcrypt.hash(password, 3);
 
-    const userData = await User.create({
-      id, firsName: name, email, password: hashPassword
-    }, { returning: ['id', 'firsName', 'email', 'createdAt' ] });
+    const userData = await userRepo.createUser(id, name, email, hashPassword);
     const userDto = new UserDto(userData);
 
     const tokens = tokenService.generateTokens({ ...userDto });
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveRefreshToken(userDto.id, tokens.refreshToken);
 
     const user = {
       id: userData.id,
@@ -37,7 +35,7 @@ class UserService {
   }
 
   async login(email, password) {
-    const existUser = await User.findOne({ where: { email } });
+    const existUser = await userRepo.getUserByEmail(email);
     if (!existUser) {
       throw ApiError.BadRequest('User with this email address not found');
     }
@@ -50,7 +48,7 @@ class UserService {
     const userDto = new UserDto(existUser);
     const tokens = tokenService.generateTokens({ ...userDto });
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveRefreshToken(userDto.id, tokens.refreshToken);
 
     const user = {
       id: userDto.id,
@@ -64,9 +62,8 @@ class UserService {
     };
   }
 
-  async logout(refreshToken, accessToken) {
-    await tokenService.removeToken(refreshToken);
-    await tokenService.pushAccessTokenToTrash(accessToken);
+  async logout(refreshToken) {
+    await tokenService.deleteRefreshToken(refreshToken);
 
     return {
       response: 'user logout'
@@ -85,11 +82,11 @@ class UserService {
     }
 
     const id = userData.id;
-    const user = await User.findOne({ where: { id } });
+    const user = userRepo.getUserById(id);
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveRefreshToken(userDto.id, tokens.refreshToken);
 
     return {
       user: userDto,
