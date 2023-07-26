@@ -1,6 +1,6 @@
 require('dotenv').config();
 const process = require('node:process');
-const app = require('./middleware/index');
+const app = require('./middleware');
 const {
   openConnectionDB,
   closeConnectionDB

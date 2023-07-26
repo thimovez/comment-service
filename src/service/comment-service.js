@@ -2,7 +2,7 @@ const ApiError = require('../exceptions/api.error');
 const { Comment, CommentPath, User } = require('../models');
 // const User = require('../models/user');
 // const fileService = require('./file-service');
-const { sequelize } = require('../models/index');
+const { sequelize } = require('../models');
 
 class CommentService {
   async createComment(content, user) {

@@ -1,4 +1,4 @@
-const { sequelize } = require('../models/index');
+const { sequelize } = require('../models');
 
 class DBService {
   // Test the connection
@@ -8,6 +8,7 @@ class DBService {
         .then(() => {
           console.log('Connection to db has been established successfully.');
         });
+      await sequelize.sync();
     } catch (err) {
       console.error('Unable to connect to the database:', err);
     }
