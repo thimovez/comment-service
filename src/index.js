@@ -1,4 +1,4 @@
-require('dotenv').config();
+const config =  require('./config/config');
 const process = require('node:process');
 const app = require('./middleware');
 const {
@@ -6,18 +6,15 @@ const {
   closeConnectionDB
 } = require('./db/db');
 
-const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   try {
-    await openConnectionDB();
-    app.listen(PORT, () => {
-      console.log(`Server started on http://localhost:${PORT}/`);
-    });
+    app.listen(config.PORT, config.HOST, () => {
+      console.log(`App listeting on http://${config.HOST}:${config.PORT}`);
+  });
   } catch (error) {
     console.log(error);
   }
-
 };
 
 start();
