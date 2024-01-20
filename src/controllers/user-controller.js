@@ -1,11 +1,12 @@
 const userService = require('../service/user-service');
+const RegistrationUserDTO = require('../dtos/registration-user-dto');
 
 class UserController {
 
   async registrarion(req, res, next) {
     try {
-      const { name, email, password } = req.body;
-      const newUser = await userService.registration(name, email, password);
+      const userData = new RegistrationUserDTO(req.body)
+      const newUser = await userService.registration(userData);
 
       res.cookie('refreshToken', newUser.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true
