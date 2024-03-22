@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-// This should be a real class/interface representing a user entity
 export interface User {
+  userID: number
   email: string,
   password: string
 }
@@ -10,18 +10,19 @@ export interface User {
 export class UsersService {
   private readonly users = [
     {
-      userId: 1,
-      username: 'john',
+      userID: 1,
+      email: 'john',
       password: 'changeme',
     },
     {
-      userId: 2,
-      username: 'maria',
+      userID: 2,
+      email: 'maria',
       password: 'guess',
     },
   ];
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+  async findOne(email: string): Promise<User | undefined> {
+    const user = this.users.find(user => user.email === email);
+    return user
   }
 }
