@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/models/user';
 
-interface SingInResponse {
+export interface SingInResponse {
   access_token: string
   refresh_token: string
 }
