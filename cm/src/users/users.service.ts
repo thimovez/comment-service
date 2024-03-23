@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
+import { CreateUserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -16,7 +16,7 @@ export class UsersService {
     },
   ];
 
-  async findOne(email: string): Promise<User | undefined> {
+  async findOne(email: string): Promise<CreateUserDTO | undefined> {
     const user = this.users.find(user => user.email === email);
     return user
   }
