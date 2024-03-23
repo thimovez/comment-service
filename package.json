@@ -33,7 +33,7 @@
     "pg": "^8.10.0",
     "sequelize": "^6.30.0",
     "sharp": "^0.32.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "eslint": "^8.36.0",

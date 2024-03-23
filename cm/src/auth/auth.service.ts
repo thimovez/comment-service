@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from '../users/dto/user.dto';
@@ -16,19 +17,21 @@ export class AuthService {
     if (user?.password !== u.password) {
       throw new UnauthorizedException();
     }
-    //TODO create id user
-    // const payload = { id: u.userID, email: u.email };
-    const payload = {email: u.email };
 
-    return {
+    const createID = uuidv4();
+    const tokenPayload = {id: createID, email: u.email };
+
+    const singInResponse = {
       user: {
-        id: 0,
+        id: createID,
         email: u.email
       },
       tokens: {
-        access_token: await this.jwtService.signAsync(payload),
-        refresh_token: await this.jwtService.signAsync(payload, {expiresIn: "7d"})
+        access_token: await this.jwtService.signAsync(tokenPayload),
+        refresh_token: await this.jwtService.signAsync(tokenPayload, {expiresIn: "7d"})
       }
     };
+
+    return singInResponse
   }
 }
