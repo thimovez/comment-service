@@ -12,4 +12,4 @@ export class AuthController {
   signIn(@Body() signInDto: User): Promise<SingInResponse> {
     return this.authService.signIn(signInDto);
   }
-}
+}  
