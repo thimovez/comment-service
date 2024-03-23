@@ -1,4 +1,9 @@
+import { UserResponse } from "src/users/interfaces/user.interface"
+
 export interface SingInResponse {
-    access_token: string
-    refresh_token: string
+    user: UserResponse
+    tokens: {
+        access_token: string
+        refresh_token: string    
+    }
 }
