@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/models/user';
+import { User } from 'src/users/interfaces/user.interface';
 
 export interface SingInResponse {
   access_token: string
