@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserDTO } from '../users/dto/login.user.dto';
+import { LoginUserDTO } from './dto/login.user.dto';
 import { SingInResponse } from './interfaces/singInResponse.interface';
 
 @Injectable()
