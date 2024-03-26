@@ -10,7 +10,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: LoginUserDTO, @Res() res: Response): Promise<SingInResponse> {
+  signIn(@Body() signInDto: LoginUserDTO, @Res({ passthrough: true }) res: Response): Promise<SingInResponse> {
     const singInResponse = this.authService.signIn(signInDto);
 
     res.cookie("refreshToken", 
