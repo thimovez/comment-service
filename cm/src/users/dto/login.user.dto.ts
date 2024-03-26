@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { User } from '../interfaces/user.interface';
 
-export class CreateUserDTO implements User {
+export class LoginUserDTO implements User {
     @IsEmail({}, {message: "Invalid email"})
     readonly email: string;
     @IsNotEmpty()
