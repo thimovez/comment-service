@@ -10,11 +10,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: LoginUserDTO, @Res({ passthrough: true }) res: Response): Promise<SingInResponse> {
-    const singInResponse = this.authService.signIn(signInDto);
-
+  async signIn(@Body() signInDto: LoginUserDTO, @Res({ passthrough: true }) res: Response): Promise<SingInResponse> {
+    const singInResponse = await this.authService.signIn(signInDto);
     res.cookie("refreshToken", 
-    singInResponse.then(v => v.tokens.refresh_token), {
+    singInResponse.tokens.refresh_token, {
       maxAge: 60 * 60 * 24 * 7,
       httpOnly: true
     });
