@@ -15,7 +15,7 @@ export class AuthService {
   async signIn(u: LoginUserDTO): Promise<SingInResponse> {
     const user = await this.usersService.findOne(u.email);
     if (user?.password !== u.password) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("password is'nt match");
     }
 
     const createID = uuidv4();
