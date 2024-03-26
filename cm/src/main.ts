@@ -7,7 +7,10 @@ import * as cookieParser from 'cookie-parser';
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(parseInt(process.env.PORT, 10) || 3000, () => {
+    console.log(`Server started on http://localhost:${parseInt(process.env.PORT, 10) || 3000}/`)
+  });
+  
 }
 
 main();
