@@ -5,18 +5,22 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: "secret",
-      signOptions: { expiresIn: '60s' },
+      useFactory: async (configService: ConfigService) => ({
+          secret: configService.get<string>('JWT_ACCESS_SECRET'),
+          signOptions: {expiresIn: configService.get<string>('JWT_ACCESS_EXPIRATION')}
+        }),
+      inject: [ConfigService],
     }),
     ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 10,
+      ttl: parseInt(process.env.REQUEST_TTL),
+      limit: parseInt(process.env.REQUEST_LIMIT),
     }]),
   ],
   providers: [
