@@ -28,7 +28,9 @@ export class AuthService {
       },
       tokens: {
         access_token: await this.jwtService.signAsync(tokenPayload),
-        refresh_token: await this.jwtService.signAsync(tokenPayload, {expiresIn: "7d"})
+        refresh_token: await this.jwtService.signAsync(tokenPayload, {
+          expiresIn: process.env.JWT_REFRESH_EXPIRATION
+        })
       }
     };
 
