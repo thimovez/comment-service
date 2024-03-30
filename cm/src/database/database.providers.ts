@@ -6,6 +6,7 @@ export const checkDirname = () => console.log(__dirname);
 export const databaseProviders = [
   {
     provide: 'DATA_SOURCE',
+    inject: [ConfigService],
     useFactory: async (configService: ConfigService) => {
       const dataSource = new DataSource({
         type: 'postgres',
