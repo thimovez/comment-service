@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginUserDTO } from './dto/login.user.dto';
 import { SingInResponse } from './interfaces/singInResponse.interface';
+import { RegistrationUserDTO } from './dto/registration.user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -20,4 +21,11 @@ export class AuthController {
 
     return singInResponse;
   }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post('registration')
+  async signUp(@Body() signUpDTO: RegistrationUserDTO, res: Response): Promise<void>{
+    await this.authService.signUp(signUpDTO);
+  }
+
 }
