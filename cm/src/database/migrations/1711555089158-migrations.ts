@@ -9,18 +9,18 @@ export class Migrations1711555089158 implements MigrationInterface {
             columns: [
                 {
                     name: "id",
-                    type: "string",
+                    type: "varchar",
                     isPrimary: true,
                     isNullable: false,
                 },
                 {
                     name: "email",
-                    type: "string",
+                    type: "varchar",
                     isNullable: false
                 },
                 {
                     name: "hashed_password",
-                    type: "string",
+                    type: "varchar",
                     isNullable: false
                 },
                 {
