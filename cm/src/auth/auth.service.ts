@@ -1,19 +1,20 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDTO } from './dto/login.user.dto';
 import { SingInResponse } from './interfaces/singInResponse.interface';
+import { RegistrationUserDTO } from './dto/registration.user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private user: UserService,
     private jwtService: JwtService
   ) {}
 
   async signIn(u: LoginUserDTO): Promise<SingInResponse> {
-    const user = await this.usersService.findOne(u.email);
+    const user = await this.user.findOne(u.email);
     if (user?.password !== u.password) {
       throw new UnauthorizedException("password is'nt match");
     }
@@ -35,5 +36,15 @@ export class AuthService {
     };
 
     return singInResponse
+  }
+
+  async signUp(consumer: RegistrationUserDTO): Promise<void> {
+    try {
+      consumer.id = uuidv4();
+      await this.user.create(consumer)
+    } catch (error) {
+      console.error('Error signing up user:', error);
+      throw new HttpException('Failed to sign up user', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

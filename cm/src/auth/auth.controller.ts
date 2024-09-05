@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Res } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, Res, HttpException } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginUserDTO } from './dto/login.user.dto';
@@ -24,8 +24,11 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('registration')
-  async signUp(@Body() signUpDTO: RegistrationUserDTO, res: Response): Promise<void>{
-    await this.authService.signUp(signUpDTO);
+  async signUp(@Body() signUpDTO: RegistrationUserDTO, @Res({passthrough: true}) res: Response): Promise<void>{
+      try {
+        await this.authService.signUp(signUpDTO);
+      } catch (error) {
+        throw error
+      }
   }
-
 }
