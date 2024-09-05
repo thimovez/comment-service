@@ -17,14 +17,18 @@ export const databaseProviders = [
         username: configService.get<string>('POSTGRES_USERNAME'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-        entities: [path.join(__dirname, '../entities/*.entity.{js,ts}')], // Use path.join for cross-platform compatibility
-        migrations: [path.join(__dirname, '../migrations/*.{js,ts}')],
+        entities: [path.join(__dirname, './entities/*.entity.{js,ts}')], // Use path.join for cross-platform compatibility
+        migrations: [path.join(__dirname, './migrations/*.{js,ts}')],
         migrationsRun: true,
         synchronize: true,
       });
 
       try {
-        return await dataSource.initialize();
+         await dataSource.initialize();
+
+         await dataSource.runMigrations();
+
+         return dataSource;
       } catch (error) {
         console.error('Error initializing DataSource:', error);
         throw error; // Re-throw to let NestJS handle it
