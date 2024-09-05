@@ -5,11 +5,11 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({type: "string", unique: true, nullable: false})
+  @Column({type: "varchar", unique: true, nullable: false})
   email: string;
 
-  @Column({type: "string", length: 60})
-  hashed_password: string;
+  @Column({type: "varchar"})
+  password: string;
 
   @CreateDateColumn({type: "timestamp", default: () => 'CURRENT_TIMESTAMP'})
   createdAt: Date;
