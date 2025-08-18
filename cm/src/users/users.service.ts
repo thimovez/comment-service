@@ -1,15 +1,14 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { LoginUserDTO } from '../auth/dto/login.user.dto';
-import { RegistrationUserDTO } from 'src/auth/dto/registration.user.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/database/entities/user.entity';
-import { USER_REPOSITORY } from 'src/constants/constants';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepo: Repository<User>
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
   ) {}
   private readonly users = [
     {
@@ -25,17 +24,11 @@ export class UserService {
   ];
 
   async findOne(email: string): Promise<LoginUserDTO | undefined> {
-    const user = this.users.find(user => user.email === email);
-    return user
+    return this.users.find((user) => user.email === email);
   }
 
-  async create(consumer: RegistrationUserDTO): Promise<User> {
-    try {
-      const userEntity = this.userRepo.create(consumer)
-      return await this.userRepo.save(userEntity);
-    } catch (error) {
-      console.error('Failed to create user:', error);
-    throw new HttpException('Internal server error while creating user', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  async create(userData: Partial<User>): Promise<User> {
+    const userEntity = this.userRepo.create(userData);
+    return await this.userRepo.save(userEntity);
   }
 }

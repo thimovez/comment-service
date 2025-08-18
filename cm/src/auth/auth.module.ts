@@ -13,9 +13,11 @@ import { ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       global: true,
       useFactory: (configService: ConfigService) => ({
-          secret: configService.get<string>('JWT_ACCESS_SECRET'),
-          signOptions: {expiresIn: configService.get<string>('JWT_ACCESS_EXPIRATION')}
-        }),
+        secret: configService.get<string>('JWT_ACCESS_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_ACCESS_EXPIRATION'),
+        },
+      }),
       inject: [ConfigService],
     }),
     ThrottlerModule.forRootAsync({
@@ -32,11 +34,10 @@ import { ConfigService } from '@nestjs/config';
     AuthService,
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+      useClass: ThrottlerGuard,
+    },
   ],
   controllers: [AuthController],
-  exports: [AuthService]
+  exports: [AuthService],
 })
-
 export class AuthModule {}

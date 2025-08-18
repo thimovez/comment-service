@@ -1,50 +1,45 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { UserService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDTO } from './dto/login.user.dto';
-import { SingInResponse } from './interfaces/singInResponse.interface';
 import { RegistrationUserDTO } from './dto/registration.user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private user: UserService,
-    private jwtService: JwtService
+    private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
-  async signIn(u: LoginUserDTO): Promise<SingInResponse> {
-    const user = await this.user.findOne(u.email);
+  async signIn(
+    u: LoginUserDTO,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userService.findOne(u.email);
     if (user?.password !== u.password) {
-      throw new UnauthorizedException("password is'nt match");
+      throw new UnauthorizedException("password isn't match");
     }
 
-    const createID = uuidv4();
-    const tokenPayload = {id: createID, email: u.email };
+    const userID = uuidv4();
+    const tokenPayload = { id: userID };
 
-    const singInResponse = {
-      user: {
-        id: createID,
-        email: u.email
-      },
-      tokens: {
-        access_token: await this.jwtService.signAsync(tokenPayload),
-        refresh_token: await this.jwtService.signAsync(tokenPayload, {
-          expiresIn: process.env.JWT_REFRESH_EXPIRATION
-        })
-      }
+    return {
+      accessToken: await this.jwtService.signAsync(tokenPayload),
+      refreshToken: await this.jwtService.signAsync(tokenPayload, {
+        expiresIn: process.env.JWT_REFRESH_EXPIRATION,
+      }),
     };
-
-    return singInResponse
   }
 
-  async signUp(consumer: RegistrationUserDTO): Promise<void> {
-    try {
-      consumer.id = uuidv4();
-      await this.user.create(consumer)
-    } catch (error) {
-      console.error('Error signing up user:', error);
-      throw new HttpException('Failed to sign up user', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  async signUp(user: RegistrationUserDTO): Promise<void> {
+    await this.userService.create({
+      email: user.email,
+      password: user.password,
+    });
   }
 }
