@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { PostgresConnectionModule } from './database/postgres-connection.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { PostgresConnectionModule } from './config/postgres-connection.module';
 import { AppConfigModule } from './config/config.module';
 
 @Module({
