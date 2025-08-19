@@ -7,7 +7,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import {
   POSTGRES_LOGGER_NAME,
   POSTGRES_TYPE_NAME,
-} from '../constants/constants';
+} from '../common/constants/constants';
 
 @Module({
   imports: [
